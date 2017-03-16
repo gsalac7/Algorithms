@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Project2 {
 	public static void main(String[] args) {
+		
 		Scanner read = new Scanner(System.in);
 		System.out.print("Enter the amount of vertices: ");
 		int v = read.nextInt();
@@ -26,7 +27,7 @@ public class Project2 {
 			}
 			System.out.println();
 		}
-		
+		long startTime = System.currentTimeMillis();
 		//check topology pattern
 		System.out.print("The topology is: ");
 		if (isRing(matrix, v)) {
@@ -38,6 +39,11 @@ public class Project2 {
 		} else {
 			System.out.println("Neither");
 		}
+		
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;
+		System.out.println(totalTime);
+		read.close();
 	}
 	public static boolean isRing(int [][]m, int v) {
 		int []counter = new int[v]; //counts the number of "valid" edge weights in the graph
@@ -50,9 +56,7 @@ public class Project2 {
 					counter[i]++; //then increment the counter for that row.
 				}//else skip counter and continue.
 			}
-		}
-		for (int i = 0; i < m.length; i++) { //the ring pattern has only two edges
-			if (counter[i] > 2) { //incident on every vertex, therefore the counter
+			if (counter[i] != 2) { //an edge is only incident on every vertex, therefore the counter
 				return false; //should only have values of 2, otherwise its not a ring.
 			}
 		}
@@ -70,13 +74,11 @@ public class Project2 {
 					counter[i]++; //add the values to the counter in each row
 				} //else continue
 			}
+			if (counter[i] != v - 1) { //for a complete graph, every vertex is connected to
+				return false; //every other vertex (not including itself) so v - 1
+			}	
 		}
-		for (int i = 0; i < m.length; i++) {
-			if (counter[i] == v - 1) { //for a complete graph, every vertex is connected to
-				return true; //every other vertex (not including itself) so v - 1
-			}
-		}
-		return false;
+		return true;
 	}
 	
 	public static boolean isStar(int [][]m, int v) {
@@ -90,15 +92,12 @@ public class Project2 {
 					counter[i]++; //add those values to the counter for each row.
 				}
 			}
-		}
-		for (int i = 0; i < m.length; i++) { //only 1 row in the ring is connected to every other vertex.
-			if (counter[i] == v - 1 || counter[i] == 1) { //every other vertext only has one edge incident to it.
+			if (counter[i] == v - 1 || counter[i] == 1) { //every other vertex only has one edge incident to it.
 				continue;
 			} else {
 				return false;
 			}
 		}
 		return true;
-		
 	}
 }
