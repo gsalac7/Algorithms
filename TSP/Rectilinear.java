@@ -20,14 +20,13 @@ public class Rectilinear {
 			points[i] = new point(x, y);
 		}
 		
-		int i = 0, j = 1, weight = 0;
-		while(i < points.length - 1 && j < points.length) {
-			weight += distance(points[i], points[j]);
-			i++;
-			j++;
+		//Assign first permutation's weight as the best weight
+		int weight = 0;
+		for (int i = 0; i < points.length - 1; i++) {
+			weight += distance(points[i], points[i+1]);
 		}
-		int best = weight;
 		
+		int best = weight;
 		System.out.println();
 		permutation(points, vertices, best);
 		read.close();
@@ -36,25 +35,27 @@ public class Rectilinear {
 	
 	public static void permutation(point[] v, int n, int best)
     {		
+		
         if (n == 1) {
-        	int i = 0, j = 1, weight = 0;
-            for (int k = 0; k < v.length; k++) {
-            	v[k].print();
-            }
-            System.out.println();
-            
-    		
-    		while(i < v.length - 1 && j < v.length) {
-    			weight += distance(v[i], v[j]);
-    			i++;
-    			j++;
+        	int weight = 0;
+    		for (int i = 0; i < v.length - 1; i++) {
+    			int d = Math.abs(v[i].x - v[i+1].x) + Math.abs(v[i].y - v[i+1].y);
+    			weight += d;
     		}
+    		
+    		//System.out.println("Total weight: " + weight);
     		
     		if (weight < best) {
     			best = weight;
+    			for (int k = 0; k < v.length; k++) {
+                	v[k].print();
+                }
+                v[0].print();
+                System.out.println();
+    			
     		}
     		
-    		System.out.println("Total weight: " + weight);
+    		System.out.println("Current best weight: " + best);
         }
         else {
             for (int f= 0; f < n; f++) {
@@ -69,17 +70,20 @@ public class Rectilinear {
         }
     }
 	
-	 private static void swap(point[] v, int i, int j)
-	 {
-	     point t = v[i];
-	     v[i] = v[j];
-	     v[j] = t;
-	 }
+	private static void swap(point[] v, int i, int j) {
+	    point t = v[i];
+	    v[i] = v[j];
+	    v[j] = t;
+	}
 	
-	public static double distance(point a, point b) {
-		double d;
-		double xPoint = Math.abs(a.getX() - b.getX());
-		double yPoint = Math.abs(a.getY() - b.getY());
+	public static void nearest(point [] v, int n) {
+		
+	}
+	
+	public static int distance(point a, point b) {
+		int d;
+		int xPoint = Math.abs(a.x - b.x);
+		int yPoint = Math.abs(a.y - b.y);
 		d = xPoint + yPoint;
 		
 		return d;
@@ -91,12 +95,6 @@ class point {
 	point(int x1, int y1) {
 		this.x = x1;
 		this.y = y1;
-	}
-	int getX() {
-		return x;
-	}
-	int getY() {
-		return y;
 	}
 	void print() {
 		System.out.print("(" + this.x + ", " + this.y + ")   ");
