@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Rectilinear {
@@ -9,7 +8,7 @@ public class Rectilinear {
 		int vertices = read.nextInt();
 		
 		point[] points = new point[vertices]; 
-		
+		point[] bestA = new point[vertices];
 		System.out.println("Enter the points; make sure they are distinct: ");
 		for (int i = 0; i < vertices; i++) {
 			int x, y;
@@ -21,82 +20,67 @@ public class Rectilinear {
 		}
 		
 		//Assign first permutation's weight as the best weight
+		for (int i = 0; i < points.length; i++) {
+    		points[i].print();
+    	}
+    	System.out.println();
 		int weight = 0;
 		for (int i = 0; i < points.length - 1; i++) {
-			weight += distance(points[i], points[i+1]);
+			int d = Math.abs(points[i].x - points[i+1].x) + Math.abs(points[i].y - points[i+1].y);
+			weight += d;
 		}
-		
 		int best = weight;
+		
+		for (int i = 0 ; i < points.length; i++) {
+			bestA[i] = points[i];
+		}
 		System.out.println();
-		permutation(points, vertices, best);
+		
+		permutation(points, vertices, best, bestA);
+		printCycle(bestA);
+		System.out.println("The best distance: " + best);
 		read.close();
 	}
 	
+	public static void printCycle(point[] v) {
+		for (int i = 0 ; i < v.length; i++) {
+			v[i].print();
+		}
+		v[0].print();
+		System.out.println();
+	}
 	
-	public static void permutation(point[] v, int n, int best)
-    {		
-		
+	public static void permutation(point[] v, int n, int best, point[] bestA) {		
         if (n == 1) {
-        	int weight = 0;
-    		for (int i = 0; i < v.length - 1; i++) {
-    			int d = Math.abs(v[i].x - v[i+1].x) + Math.abs(v[i].y - v[i+1].y);
-    			weight += d;
-    		}
-    		
-    		//System.out.println("Total weight: " + weight);
-    		
-    		if (weight < best) {
-    			best = weight;
-    			for (int k = 0; k < v.length; k++) {
-                	v[k].print();
+        	int dist = 0;
+        	for (int i = 0; i < v.length - 1; i++) {
+        		
+        		int d = Math.abs(v[i].x - v[i+1].x) + Math.abs(v[i].y - v[i+1].y);
+        		dist += d;
+        	}
+        	 //find the least distance
+        	if (dist < best) {
+        		best = dist;
+        		for (int k = 0; k < v.length; k++) {
+                	bestA[k] = v[k];
                 }
-                v[0].print();
-                System.out.println();
-    			
-    		}
-    		
-    		System.out.println("Current best weight: " + best);
-        }
+        	}        	
+        } 
         else {
-            for (int f= 0; f < n; f++) {
-                permutation(v, n - 1, best);
-                if (n % 2 == 1) {
-                    swap(v, 0, n - 1);
-                }
-                else {
-                    swap(v, f, n - 1);
-                }
-            }
+        	for (int i = 0; i < n - 1; i++) {
+        		permutation(v, n - 1, best, bestA);
+        		if (n%2 == 0) {
+        			point temp = v[i];
+        			v[i] = v[n - 1];
+        			v[n - 1] = temp;
+        		}
+        		else {
+        			point temp = v[0];
+        			v[0] = v[n - 1];
+        			v[n - 1] = temp;
+        		}
+        	}
+        	permutation(v, n - 1, best, bestA);
         }
     }
-	
-	private static void swap(point[] v, int i, int j) {
-	    point t = v[i];
-	    v[i] = v[j];
-	    v[j] = t;
-	}
-	
-	public static void nearest(point [] v, int n) {
-		
-	}
-	
-	public static int distance(point a, point b) {
-		int d;
-		int xPoint = Math.abs(a.x - b.x);
-		int yPoint = Math.abs(a.y - b.y);
-		d = xPoint + yPoint;
-		
-		return d;
-	}
-}
-
-class point {
-	int x, y;
-	point(int x1, int y1) {
-		this.x = x1;
-		this.y = y1;
-	}
-	void print() {
-		System.out.print("(" + this.x + ", " + this.y + ")   ");
-	}
 }
