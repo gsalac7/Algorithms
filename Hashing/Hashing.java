@@ -14,16 +14,11 @@ public class Hashing {
 		String [] T1 = new String[tableSize];
 		String [] T2 = new String[tableSize];
 		
-		//for (int i = 0; i < tableSize; i++) {
-			//T1[i] = "null";
-			//T2[i] = "null";
-		//}
-		
 		System.out.print("Enter the name of the file: ");
 		String fileName = read.nextLine();
 		
 		try {
-			displayFile("C:\\Users\\gsala_000\\Desktop\\" + fileName + ".txt", T1, T2, tableSize);
+			hashFile("C:\\Users\\gsalac7\\Desktop\\" + fileName + ".txt", T1, T2, tableSize);
 		} catch (IOException ex) {
 			System.out.println("Error reading the file");
 		}
@@ -36,12 +31,11 @@ public class Hashing {
 		read.close();
 	}
 	
-	public static void displayFile(String fname, String [] T1, String[] T2, int tableSize) throws IOException {
+	public static void hashFile(String fname, String [] T1, String[] T2, int tableSize) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(fname));
 		try {	
 			String line;
 			while((line = in.readLine())!=null) {
-				System.out.println(line);
 				hash(T1, T2, hashFunction1(line, tableSize), hashFunction2(line, tableSize), line);
 			}
 		} catch(Exception Ex){
@@ -52,12 +46,12 @@ public class Hashing {
 	} 
 	
 	public static void hash(String [] T1, String [] T2, int key1, int key2, String line) {
-		if (T1[key1] != "null") {
+		if (T1[key1] == null) {
 			T1[key1] = line;
-			System.out.println("String <" + line + "> is entering T1[" + key1 + "]");
+			System.out.println("String <" + line + "> will be placed at Table 1[" + key1 + "]");
 		} else {
 			T2[key2] = line;
-			System.out.println("String <" + line + "> is entering T2[" + key2 + "]");
+			System.out.println("String <" + line + "> will be placed at Table 2[" + key2 + "]");
 		}
 	}
 	
@@ -69,11 +63,9 @@ public class Hashing {
 			
 		}
 		value = value % tableSize;
-		System.out.println(value);
 		if (value < 0) {
 			value += tableSize;
 		}
-		System.out.println(value);
 		return value;
 	}
 	
@@ -89,8 +81,16 @@ public class Hashing {
 	}
 	
 	public static void displayTable(String [] T1, String []T2) {
-		for (int i = 0; i < T1.length; i++) {
-			System.out.println(T1[i] + "\t\t" + T2[i]);
-		}
+            System.out.println();
+            System.out.println("Table 1 Hash Table: ");	
+            for (int i = 0; i < T1.length; i++) {
+		System.out.println(T1[i]);
+            }
+                
+            System.out.println();
+            System.out.println("Table 2 Hash Table: ");
+            for (int i = 0; i < T1.length; i++) {
+		System.out.println(T2[i]);
+            }
 	}
 }
